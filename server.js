@@ -1,53 +1,44 @@
 const express = require("express");
-const app = express();
+const cors = require("cors");
 
+const app = express();
+app.use(cors());
 app.use(express.json());
 
+let orders = [];
+
+// Test server
 app.get("/", (req, res) => {
-  res.send("Chum Chum Backend is running");
+  res.send("Chum Chum Backend Running");
 });
 
-// Tạo đơn hàng (khách gửi yêu cầu mua)
+// Tạo đơn hàng
 app.post("/create-order", (req, res) => {
-  const { username, product } = req.body;
+  const { name, phone } = req.body;
 
-  if (!username || !product) {
-    return res.status(400).json({ message: "Thiếu thông tin" });
+  if (!name || !phone) {
+    return res.status(400).json({ message: "Missing info" });
   }
 
-  // Tạm thời chỉ giả lập đơn hàng
-  const order = {
+  const newOrder = {
     id: Date.now(),
-    username,
-    product,
-    status: "PENDING" // Chờ bạn kiểm tra tiền
+    name,
+    phone,
+    product: "Locket Gold",
+    status: "pending"
   };
 
-  res.json({
-    message: "Đơn hàng đã tạo, chờ xác nhận thanh toán",
-    order
-  });
+  orders.push(newOrder);
+
+  res.json({ message: "Order created", order: newOrder });
 });
 
-// Xác nhận thanh toán (bạn kiểm tra tiền xong mới gọi API này)
-app.post("/confirm-payment", (req, res) => {
-  const { orderId } = req.body;
-
-  if (!orderId) {
-    return res.status(400).json({ message: "Thiếu orderId" });
-  }
-
-  res.json({
-    message: "Thanh toán thành công",
-    orderId,
-    status: "SUCCESS"
-  });
+// Xem tất cả đơn (admin)
+app.get("/admin/orders", (req, res) => {
+  res.json(orders);
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
-});
-app.get("/", (req, res) => {
-  res.send("Chum Chum Backend is running");
 });
