@@ -1,3 +1,6 @@
+const ADMIN_EMAIL = "chumchumcte193@gmail.com";
+const ADMIN_PASSWORD = "190329";
+
 dconst express = require("express");
 const cors = require("cors");
 
@@ -70,6 +73,15 @@ app.post("/approve/:id", (req, res) => {
   const order = orders.find(o => o.id == id);
   if (order) order.status = "done";
   res.redirect("/admin");
+});
+app.post("/admin-login", (req, res) => {
+  const { email, password } = req.body;
+
+  if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    res.json({ success: true });
+  } else {
+    res.json({ success: false });
+  }
 });
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server running");
