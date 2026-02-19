@@ -83,6 +83,19 @@ app.post("/admin-login", (req, res) => {
     res.json({ success: false });
   }
 });
+app.post("/admin-login", (req, res) => {
+  const { email, password } = req.body;
+
+  if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    res.json({ success: true });
+  } else {
+    res.json({ success: false });
+  }
+});
+
+app.get("/admin", (req, res) => {
+  res.send("Đây là trang admin duyệt đơn");
+});
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server running");
 });
