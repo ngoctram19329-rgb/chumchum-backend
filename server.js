@@ -1,8 +1,7 @@
-app.use(express.json());
 const ADMIN_EMAIL = "chumchumcte193@gmail.com";
 const ADMIN_PASSWORD = "19329";
 
-dconst express = require("express");
+const express = require("express");
 const cors = require("cors");
 
 const app = express();
