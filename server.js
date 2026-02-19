@@ -7,38 +7,30 @@ app.use(express.json());
 
 let orders = [];
 
-// Test server
-app.get("/", (req, res) => {
-  res.send("Chum Chum Backend Running");
-});
-
-// Tạo đơn hàng
 app.post("/create-order", (req, res) => {
-  const { name, phone } = req.body;
+  const { username } = req.body;
 
-  if (!name || !phone) {
-    return res.status(400).json({ message: "Missing info" });
+  if (!username) {
+    return res.status(400).json({ message: "Username required" });
   }
 
   const newOrder = {
     id: Date.now(),
-    name,
-    phone,
-    product: "Locket Gold",
-    status: "pending"
+    username,
+    status: "pending",
+    createdAt: new Date()
   };
 
   orders.push(newOrder);
 
-  res.json({ message: "Order created", order: newOrder });
+  res.json(newOrder);
 });
 
-// Xem tất cả đơn (admin)
 app.get("/admin/orders", (req, res) => {
   res.json(orders);
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+  console.log("Server running...");
 });
