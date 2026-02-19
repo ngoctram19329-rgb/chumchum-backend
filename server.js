@@ -46,7 +46,31 @@ app.post("/approve", (req, res) => {
   }
   res.json({ message: "Đã duyệt" });
 });
+app.get("/admin", (req, res) => {
+  let html = "<h2>Danh sách đơn</h2>";
 
+  orders.forEach(o => {
+    html += `
+      <div style="border:1px solid #ccc;padding:10px;margin:10px">
+        ID: ${o.id} <br>
+        Username: ${o.username} <br>
+        Status: ${o.status} <br>
+        <form method="POST" action="/approve/${o.id}">
+          <button>Duyệt</button>
+        </form>
+      </div>
+    `;
+  });
+
+  res.send(html);
+});
+
+app.post("/approve/:id", (req, res) => {
+  const id = req.params.id;
+  const order = orders.find(o => o.id == id);
+  if (order) order.status = "done";
+  res.redirect("/admin");
+});
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server running");
 });
