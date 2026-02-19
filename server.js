@@ -1,3 +1,4 @@
+app.use(express.json());
 const ADMIN_EMAIL = "chumchumcte193@gmail.com";
 const ADMIN_PASSWORD = "19329";
 
