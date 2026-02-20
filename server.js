@@ -42,7 +42,16 @@ app.post("/approve-order/:id", (req, res) => {
   order.status = "approved";
   res.json({ success: true });
 });
+// Xoá đơn
+app.post("/delete-order/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const index = orders.findIndex(o => o.id === id);
 
+  if (index === -1) return res.json({ success: false });
+
+  orders.splice(index, 1);
+  res.json({ success: true });
+});
 // Kiểm tra trạng thái
 app.get("/order-status/:id", (req, res) => {
   const id = Number(req.params.id);
