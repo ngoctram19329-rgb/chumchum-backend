@@ -7,9 +7,15 @@ app.use(express.json());
 
 let orders = [];
 
-// Tạo đơn
+/* =========================
+   TẠO ĐƠN
+========================= */
 app.post("/create-order", (req, res) => {
   const { name, phone, product, price } = req.body;
+
+  if (!name || !phone || !product || !price) {
+    return res.json({ success: false, message: "Thiếu dữ liệu" });
+  }
 
   const newOrder = {
     id: Date.now().toString(),
@@ -21,41 +27,65 @@ app.post("/create-order", (req, res) => {
   };
 
   orders.push(newOrder);
-  res.json({ success: true, id: newOrder.id });
+
+  res.json({
+    success: true,
+    id: newOrder.id
+  });
 });
 
-// Lấy tất cả đơn
+/* =========================
+   LẤY DANH SÁCH ĐƠN
+========================= */
 app.get("/orders", (req, res) => {
   res.json(orders);
 });
 
-// Duyệt đơn
+/* =========================
+   DUYỆT ĐƠN
+========================= */
 app.post("/approve/:id", (req, res) => {
   const id = req.params.id;
 
-  const order = orders.find(o => o.id == id);
-  if (!order) return res.json({ success: false });
+  const order = orders.find(o => o.id === id);
+  if (!order) {
+    return res.json({ success: false });
+  }
 
   order.status = "approved";
   res.json({ success: true });
 });
 
-// Xoá đơn
+/* =========================
+   XOÁ ĐƠN
+========================= */
 app.post("/delete/:id", (req, res) => {
   const id = req.params.id;
 
-  orders = orders.filter(o => o.id != id);
+  orders = orders.filter(o => o.id !== id);
   res.json({ success: true });
 });
 
-// Kiểm tra trạng thái cho khách
+/* =========================
+   KHÁCH KIỂM TRA TRẠNG THÁI
+========================= */
 app.get("/status/:id", (req, res) => {
   const id = req.params.id;
 
-  const order = orders.find(o => o.id == id);
-  if (!order) return res.json({ success: false });
+  const order = orders.find(o => o.id === id);
+  if (!order) {
+    return res.json({ success: false });
+  }
 
-  res.json({ success: true, status: order.status });
+  res.json({
+    success: true,
+    status: order.status
+  });
 });
 
-app.listen(3000, () => console.log("Server running"));
+/* ========================= */
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});
