@@ -10,7 +10,7 @@ const ADMIN_PASSWORD = "19329";
 
 let orders = [];
 
-// tạo đơn
+// Tạo đơn
 app.post("/create-order", (req, res) => {
   const { name } = req.body;
 
@@ -21,10 +21,37 @@ app.post("/create-order", (req, res) => {
   };
 
   orders.push(newOrder);
+
+  res.json({ success: true, id: newOrder.id });
+});
+
+// Lấy tất cả đơn (admin)
+app.get("/orders", (req, res) => {
+  res.json(orders);
+});
+
+// Duyệt đơn
+app.post("/approve-order/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const order = orders.find(o => o.id === id);
+
+  if (!order) return res.json({ success: false });
+
+  order.status = "approved";
   res.json({ success: true });
 });
 
-// đăng nhập admin
+// Kiểm tra trạng thái đơn (khách)
+app.get("/order-status/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const order = orders.find(o => o.id === id);
+
+  if (!order) return res.json({ success: false });
+
+  res.json({ success: true, status: order.status });
+});
+
+// Đăng nhập admin
 app.post("/admin-login", (req, res) => {
   const { email, password } = req.body;
 
@@ -35,35 +62,6 @@ app.post("/admin-login", (req, res) => {
   }
 });
 
-// lấy danh sách đơn
-app.get("/orders", (req, res) => {
-  res.json(orders);
-});
-
-// duyệt đơn
-app.post("/approve-order", (req, res) => {
-  const { id } = req.body;
-
-  const order = orders.find(o => o.id === id);
-  if (order) {
-    order.status = "approved";
-    res.json({ success: true });
-  } else {
-    res.json({ success: false });
-  }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
-app.get("/order-status/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const order = orders.find(o => o.id === id);
-
-  if (!order) {
-    return res.json({ success: false });
-  }
-
-  res.json({ success: true, status: order.status });
+app.listen(3000, () => {
+  console.log("Server running");
 });
