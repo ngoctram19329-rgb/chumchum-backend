@@ -57,3 +57,13 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+app.get("/order-status/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const order = orders.find(o => o.id === id);
+
+  if (!order) {
+    return res.json({ success: false });
+  }
+
+  res.json({ success: true, status: order.status });
+});
