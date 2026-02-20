@@ -12,20 +12,22 @@ let orders = [];
 
 // Tạo đơn
 app.post("/create-order", (req, res) => {
-  const { name } = req.body;
+  const { name, phone, product, price } = req.body;
 
   const newOrder = {
     id: Date.now(),
     name,
+    phone,
+    product,
+    price,
     status: "pending"
   };
 
   orders.push(newOrder);
-
   res.json({ success: true, id: newOrder.id });
 });
 
-// Lấy tất cả đơn (admin)
+// Lấy danh sách đơn
 app.get("/orders", (req, res) => {
   res.json(orders);
 });
@@ -41,7 +43,7 @@ app.post("/approve-order/:id", (req, res) => {
   res.json({ success: true });
 });
 
-// Kiểm tra trạng thái đơn (khách)
+// Kiểm tra trạng thái
 app.get("/order-status/:id", (req, res) => {
   const id = Number(req.params.id);
   const order = orders.find(o => o.id === id);
@@ -51,7 +53,7 @@ app.get("/order-status/:id", (req, res) => {
   res.json({ success: true, status: order.status });
 });
 
-// Đăng nhập admin
+// Login admin
 app.post("/admin-login", (req, res) => {
   const { email, password } = req.body;
 
@@ -62,6 +64,4 @@ app.post("/admin-login", (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server running");
-});
+app.listen(3000, () => console.log("Server running"));
