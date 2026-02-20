@@ -5,9 +5,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const ADMIN_EMAIL = "chumchumcte193@gmail.com";
-const ADMIN_PASSWORD = "19329";
-
 let orders = [];
 
 // Tạo đơn
@@ -15,7 +12,7 @@ app.post("/create-order", (req, res) => {
   const { name, phone, product, price } = req.body;
 
   const newOrder = {
-    id: Date.now(),
+    id: Date.now().toString(),
     name,
     phone,
     product,
@@ -27,50 +24,38 @@ app.post("/create-order", (req, res) => {
   res.json({ success: true, id: newOrder.id });
 });
 
-// Lấy danh sách đơn
+// Lấy tất cả đơn
 app.get("/orders", (req, res) => {
   res.json(orders);
 });
 
 // Duyệt đơn
-app.post("/approve-order/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const order = orders.find(o => o.id === id);
+app.post("/approve/:id", (req, res) => {
+  const id = req.params.id;
 
+  const order = orders.find(o => o.id == id);
   if (!order) return res.json({ success: false });
 
   order.status = "approved";
   res.json({ success: true });
 });
+
 // Xoá đơn
-app.post("/delete-order/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const index = orders.findIndex(o => o.id === id);
+app.post("/delete/:id", (req, res) => {
+  const id = req.params.id;
 
-  if (index === -1) return res.json({ success: false });
-
-  orders.splice(index, 1);
+  orders = orders.filter(o => o.id != id);
   res.json({ success: true });
 });
-// Kiểm tra trạng thái
-app.get("/order-status/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const order = orders.find(o => o.id === id);
 
+// Kiểm tra trạng thái cho khách
+app.get("/status/:id", (req, res) => {
+  const id = req.params.id;
+
+  const order = orders.find(o => o.id == id);
   if (!order) return res.json({ success: false });
 
   res.json({ success: true, status: order.status });
-});
-
-// Login admin
-app.post("/admin-login", (req, res) => {
-  const { email, password } = req.body;
-
-  if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-    res.json({ success: true });
-  } else {
-    res.json({ success: false });
-  }
 });
 
 app.listen(3000, () => console.log("Server running"));
