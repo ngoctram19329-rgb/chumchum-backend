@@ -8,7 +8,7 @@ app.use(express.json());
 app.post("/admin-login", (req, res) => {
   const { email, password } = req.body;
 
-  if (email === "admin@gmail.com" && password === "123456") {
+  if (email === "chumchumcte193@gmail.com" && password === "19329") {
     res.json({ success: true });
   } else {
     res.json({ success: false });
