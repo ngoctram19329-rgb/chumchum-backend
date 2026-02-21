@@ -4,7 +4,9 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 
-const BOT_TOKEN = "DAN_TOKEN_CUA_BAN_VAO_DAY";
+const BOT_TOKEN = "4446818516693272848:JYuZgZQ
+GTWPgeAsQdpwEBjitVMcRMVLCm yzNSclxQaLEkCibwHurJkLzEJSNfvx
+W";
 
 async function sendMessage(userId, text) {
   try {
