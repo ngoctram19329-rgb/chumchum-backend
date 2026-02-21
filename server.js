@@ -4,14 +4,15 @@ const app = express();
 app.use(express.json());
 
 app.post("/webhook", (req, res) => {
-  console.log("Data từ Zalo:", req.body);
+  console.log("Nhận từ Zalo:", req.body);
   res.status(200).send("OK");
 });
 
 app.get("/", (req, res) => {
-  res.send("Server đang chạy");
+  res.send("Webhook server running");
 });
 
-app.listen(3000, () => {
-  console.log("Server running");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server chạy ở cổng " + PORT);
 });
